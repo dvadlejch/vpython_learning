@@ -12,12 +12,12 @@ vp.scene.fov = 0.01
 vp.scene.autoscale = False
 
 # ----- simulation params
-N = 1
+N = 5
 N_in_line = ceil( vp.sqrt(N) )
-wall_stiffness = 50
+wall_stiffness = 10
 
-step_per_frame = 10
-dt = 0.02
+step_per_frame = 100
+dt = 0.002
 t = 0
 
 
@@ -27,6 +27,8 @@ vx = []
 vy = []
 ax = []
 ay = []
+#ax_w = []  # wall acceleration
+#ay_w = []
 ball = []
 
 j = 0
@@ -44,10 +46,12 @@ for i in range(N):
 
     x.append(width/4 + x_pos)
     y.append(width/4 + y_pos)
-    vx.append(0.1)
-    vy.append(0.1)
+    vx.append(0)
+    vy.append(0)
     ax.append(0)
     ay.append(0)
+#    ax_w.append(0)
+#    ay_w.append(0)
     ball.append(vp.sphere(pos=vp.vector(x[i],y[i],0), radius=0.5, color=vp.color.blue))
 
 #----- calculation functions
@@ -85,7 +89,25 @@ def computeAccel():
         else:
             ay[i] = 0
 
+    # particle - particle interaction, Lenard-Jones
+    for i in range(N):
+        for j in range(i):
+            r_ij_2 = (x[j] - x[i])**2 + (y[j] - y[i])**2
+            force_factor = 24*(2/(r_ij_2**3) - 1)/(r_ij_2**4)
+            ax[j] += force_factor*(x[j] - x[i])
+            ay[j] += force_factor * (y[j] - y[i])
+            ax[i] += -ax[j]
+            ay[i] += -ay[j]
+
+
     pass
+
+# total energy calcul
+def totalE():
+    E = 0
+    for i in range(N):
+        E += 0.5*(vx[i]**2 + vy[i]**2)
+    return E
 #----- main simulation loop
 
 while True:
@@ -94,6 +116,9 @@ while True:
 #---- calculating next position
     for i in range(step_per_frame):
         singleStep()
+
+#    E = totalE()
+#    print(E)
 
 #---- moving with balls
     for i in range(N):
