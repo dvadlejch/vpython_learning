@@ -14,10 +14,10 @@ vp.scene.autoscale = False
 # ----- simulation params
 N = 5
 N_in_line = ceil( vp.sqrt(N) )
-wall_stiffness = 10
+wall_stiffness = 0
 
-step_per_frame = 100
-dt = 0.002
+step_per_frame = 10
+dt = 0.02
 t = 0
 
 
@@ -108,6 +108,16 @@ def totalE():
     for i in range(N):
         E += 0.5*(vx[i]**2 + vy[i]**2)
     return E
+
+# momentum calcul
+def totalMom():
+    px = 0
+    py = 0
+    for i in range(N):
+        px += vx[i]
+        py += vy[i]
+    return px, py
+
 #----- main simulation loop
 
 while True:
@@ -117,8 +127,10 @@ while True:
     for i in range(step_per_frame):
         singleStep()
 
-#    E = totalE()
-#    print(E)
+    # E = totalE()
+    # print(E)
+   # px, py = totalMom()
+   # print(px, py)
 
 #---- moving with balls
     for i in range(N):
