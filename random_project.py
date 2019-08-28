@@ -4,8 +4,10 @@ import matplotlib.pyplot as plt
 
 n = 10
 x = []
-for i in range(200):
-    x.append( int(n*random()) )
+y = []
+for i in range(100):
+    x.append( n*random() )
+    y.append( n*random() )
 
-plt.hist(x)
+plt.plot(x, y, 'o', color='red', linestyle='None')
 plt.show()
