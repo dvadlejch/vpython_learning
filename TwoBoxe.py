@@ -4,8 +4,8 @@ import numpy as np
 from math import factorial
 
 # ---- parameters
-n = 120 # total number of molecules
-t_max = 100000 # total number of simulated changes
+n = 100 # total number of molecules
+t_max = 200000 # total number of simulated changes
 n_left_list = []
 t_list = np.arange(0, t_max)
 n_left_arange = np.arange(0, n+1, 1)
@@ -37,6 +37,6 @@ factor2 = factorial(n)
 for i in range(len(n_left_arange)):
     bin_dist.append( factor1*factor2/(factorial(n_left_arange[i])*factorial(n - n_left_arange[i])) )
 
-plt.hist(n_left_list, density=True, bins=50)
+plt.hist(n_left_list, density=True, bins=70)
 plt.plot(n_left_arange, bin_dist)
 plt.show()
